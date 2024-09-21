@@ -7,6 +7,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import Axios from "axios";
 import Button from "react-bootstrap/Button";
 import  Axios  from "axios";
 import Tooltip from "tooltip.js";

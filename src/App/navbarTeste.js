@@ -34,7 +34,7 @@ function NavBar() {
            
           </Nav>
           <Nav className="ms-auto me-0 float-end">
-          <Nav.Link href="#login" className='text-body'>Login</Nav.Link>
+          <Nav.Link href="/login" className='text-body'>Login</Nav.Link>
 
           </Nav>
         </Navbar.Collapse>
