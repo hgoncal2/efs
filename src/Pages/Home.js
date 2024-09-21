@@ -16,6 +16,8 @@ export const Home = () => {
   useEffect(() => {
     const fetchTemas = async () => {
       try {
+        //Se quisermos ver todos os temas,não apenas os que têm sala atribuida,podemos passar o param
+        // "showTemasSemSala=true",por defeito é false
         const response = await fetch("/gerir/temas/");
         if (!response.ok) {
           throw new Error(response.statusText);
@@ -61,7 +63,7 @@ export const Home = () => {
      {row.descricao}
  </div>
  <div className="mt-4">
- <LinkContainer to="/temas/reserva/4">
+ <LinkContainer to={`/temas/reserva/${row.salaId}`}>
         <Button className={`btn btn-outline-${getDifColor(row.dificuldade)}`} as="a" variant="">VER TEMA</Button>
         </LinkContainer>
 </div>
