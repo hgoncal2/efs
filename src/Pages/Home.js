@@ -65,7 +65,7 @@ export const Home = () => {
      {row.descricao}
  </div>
  <div className="mt-4">
- <LinkContainer to={`/temas/reserva/${row.salaId}`}>
+ <LinkContainer to={`/temas/reserva/${row.salaID}`}>
         <Button className={`btn btn-outline-${getDifColor(row.dificuldade)}`} as="a" variant="">VER TEMA</Button>
         </LinkContainer>
 </div>
