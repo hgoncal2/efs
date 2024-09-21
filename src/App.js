@@ -6,6 +6,8 @@ import { BrowserRouter as Router,Route,Routes,useParams} from 'react-router-dom'
 import { Home } from './Pages/Home';
 import { Temas } from './Pages/Temas';
 import { ReservasSala } from './Pages/ReservasSala.js';
+import { Login } from './Pages/Login.js';
+
 import { NotFound } from './Pages/404';
 
 export function getDifColor(difficulty){
@@ -28,7 +30,8 @@ function App()  {
         <Route path="/" element={<Home/>}></Route>
         <Route path="/temas" element={<Temas/>}></Route>
         <Route path="/temas/reserva/:id" element={<ReservasSala/>}></Route>
-        
+        <Route path="/login" element={<Login/>}></Route>
+
       </Routes>
     </Router>
       

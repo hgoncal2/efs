@@ -54,7 +54,7 @@ export const Home = () => {
         >
           <td style={{ width: "50%" }}>
 
-          <img className="d-block w-100" style={{ height: "300px" }} src={`http://localhost:5206/Imagens/${row.listaDeFotos[1]}`} alt="First slide" title={row.nome} />
+          <img className="d-block w-100" style={{ height: "300px" }} src={`http://localhost:5206/Imagens/${row.listaDeFotos[0]}`} alt="First slide" title={row.nome} />
           </td>
           <td className="text-center">
           <div className="h3 text-center text-@c mt-4">
@@ -65,7 +65,7 @@ export const Home = () => {
      {row.descricao}
  </div>
  <div className="mt-4">
- <LinkContainer to={`/temas/reserva/${row.salaId}`}>
+ <LinkContainer to={`/temas/reserva/${row.salaID}`}>
         <Button className={`btn btn-outline-${getDifColor(row.dificuldade)}`} as="a" variant="">VER TEMA</Button>
         </LinkContainer>
 </div>

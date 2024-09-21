@@ -7,6 +7,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import Axios from "axios";
 import Button from "react-bootstrap/Button";
 import Tooltip from "tooltip.js";
 import DialogEvent from "../App/Dialog"
@@ -62,13 +63,15 @@ export const ReservasSala = (props) => {
   useEffect(() => {
     const fetchReservas = async () => {
       try {
-        const response = await fetch("/reservasSala/" + id + "?showCanc=true");
-        if (!response.ok) {
-          throw new Error(response.statusText);
-        }
-        const data = await response.json();
-        setReservas(data);
-        makeCalendar(data);
+        const response = await Axios.get("http://localhost:5206/api/reservasSala/" + id + "?showCanc=true").then((res) => {
+          if (res.status!=200) {
+            throw new Error(res.statusText);
+          }
+          const data = res.data;
+          setReservas(data);
+          makeCalendar(data);
+      });
+        
       } catch (err) {
         setError(err.message);
       }
