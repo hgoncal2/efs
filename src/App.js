@@ -1,23 +1,37 @@
 import logo from './logo.svg';
+import "bootswatch/dist/superhero/bootstrap.min.css"
 import './App.css';
+import NavBar from './App/navbarTeste';
+import { BrowserRouter as Router,Route,Routes,useParams} from 'react-router-dom';
+import { Home } from './Pages/Home';
+import { Temas } from './Pages/Temas';
+import { ReservasSala } from './Pages/ReservasSala.js';
+import { NotFound } from './Pages/404';
 
-function App() {
+export function getDifColor(difficulty){
+
+  if (difficulty == 0) return "success";
+  if (difficulty == 1) return "warning";
+  if (difficulty == 2) return "danger";
+  if (difficulty == 3) return "secondary";
+
+}
+
+function App()  {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <div className='App' >
+    <header >
+        <NavBar  />
       </header>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home/>}></Route>
+        <Route path="/temas" element={<Temas/>}></Route>
+        <Route path="/temas/reserva/:id" element={<ReservasSala/>}></Route>
+        
+      </Routes>
+    </Router>
+      
     </div>
   );
 }

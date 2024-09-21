@@ -2,6 +2,8 @@
   text-align: center;
 }
 
+
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -12,6 +14,11 @@
     animation: App-logo-spin infinite 20s linear;
   }
 }
+.carousel-inner > .item > img, .carousel-inner > .item > a > img {
+    width: 100%;
+}
+
+
 
 .App-header {
   background-color: #282c34;
@@ -23,7 +30,9 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
-
+.home{
+  height: 300px;
+}
 .App-link {
   color: #61dafb;
 }
