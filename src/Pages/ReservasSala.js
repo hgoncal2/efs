@@ -9,7 +9,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import Axios from "axios";
 import Button from "react-bootstrap/Button";
-import  Axios  from "axios";
+import { Alert } from "react-bootstrap";
 import Tooltip from "tooltip.js";
 import { DialogEvent, DialogSelect } from '../App/Dialog';
 import ptLocale from "@fullcalendar/core/locales/pt";
@@ -23,6 +23,7 @@ export const ReservasSala = (props) => {
   const [selected, setSelected] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [alert, setAlert] = useState(false); 
 
 
   const handleEventClick = (arg) => {
@@ -39,7 +40,12 @@ export const ReservasSala = (props) => {
     setShowDialog(false);
     setSelected(false)
   }
-
+  const handleShowAlert = () => {
+    setAlert(true);
+    setTimeout(() => {
+      window.location.reload(); // Esconder o alerta após 3 segundos, por exemplo
+    }, 1500);
+};
   const handleSelect = () => {
       setSelected(true)
   }
@@ -86,7 +92,8 @@ function showDisplay(data){
    let jsonVar = {
       "preco" : t.temaPreco,
       "minPessoas" : t.temaMinPessoas,
-      "maxPessoas": t.temaMaxPessoas
+      "maxPessoas": t.temaMaxPessoas,
+      "salaId":reservas.salaId
     }
     return jsonVar;
       
@@ -124,7 +131,9 @@ function showDisplay(data){
   console.log(events)
   console.log("waad")
   return (
+   
     <div>
+     {alert && <Alert variant="success">Reserva realizada com sucesso!</Alert>}
     {showDialog && <DialogEvent
         show={showDialog}
         handleClose={handleClose}
@@ -133,7 +142,7 @@ function showDisplay(data){
       }
 
       {selected && <DialogSelect show={selected}
-        handleClose={handleClose}
+        handleClose={handleClose} handleShowAlert={handleShowAlert}
         e={selectedEvent} tema={devolveTemaJson(reservas)}/>}
 
       

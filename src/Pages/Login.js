@@ -19,11 +19,8 @@ export const Login = () => {
          // Dados que serão enviados para a API de autenticação
         try {
             const response = await Axios
-                .post("http://localhost:5206/api/gerir/account", { username: 'daniel2', password: 'Teste123!'},{
-                    headers: {
-                      "Access-Control-Allow-Credentials":true
-                  
-                    }})
+                .post("http://localhost:5206/api/gerir/account", { username: '123', password: '123'},{
+                    withCredentials:true})
                 .then((res) => {
                     if (res.status!=200) {
                       throw new Error(res.statusText);

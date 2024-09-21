@@ -2,6 +2,8 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { X } from 'react-bootstrap-icons';
+import  Axios  from "axios";
+import {Alert}  from "react-bootstrap";
 
 
 
@@ -28,30 +30,41 @@ function showCancel(canc){
 }
 
  
-const handleConfirmReserva =  async () => {
-    try {
-      const response = await Axios.post("http://localhost:5206/api/reservasSala/").then((res) =>{
-        if (res.status!=200) {
-            throw new Error(res.statusText);
-          }
-          const data = res.data;
-      setReservas(data);
-      makeCalendar(data);
-    });
-     
-    } catch (err) {
-      setError(err.message);
-    }
-  };
 
 
-export const DialogSelect = ({ show, handleClose, e, salaId,tema}) =>{
+export const DialogSelect = ({ show, handleClose, handleShowAlert,e, salaId,tema}) =>{
+    const [alert, setAlert] = useState(false);
+
+    async function handleConfirmReserva(props){
+        try {
+          const response = await Axios.post("http://localhost:5206/api/reservas/",{
+            salaId:props.salaId,
+            nPessoas:props.nPessoas,
+            dataI:props.dataI
+    
+    
+          },{withCredentials:true}).then((res) =>{
+            if (res.status!=200) {
+                throw new Error(res.statusText);
+              }else{
+                handleShowAlert()
+                handleClose()
+              }
+             
+        });
+         
+        } catch (err) {
+          //setError(err.message);
+        }
+      };
+    
 
     const [nPessoas, setNPessoas] = useState(tema.minPessoas);
 ;    console.log(e)
 
     return (
         <>
+        <Alert variant="success" show={alert}></Alert>
           <Modal  show={show} onHide={handleClose}>
             <Modal.Header closeButton className="bg-primary">
             
@@ -84,7 +97,7 @@ export const DialogSelect = ({ show, handleClose, e, salaId,tema}) =>{
               <Button variant="danger" onClick={handleClose}>
                 Fechar
               </Button>
-              <Button variant="success" onClick={handleConfirmReserva}>
+              <Button variant="success" onClick={ () => handleConfirmReserva({salaId:tema.salaId,nPessoas:nPessoas,dataI:e.startStr})}>
                 Confirmar reserva
               </Button>
             </Modal.Footer>
