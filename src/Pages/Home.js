@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getDifColor } from "../App";
 import {LinkContainer} from "react-router-bootstrap";
-
+import Axios from "axios";
 import Button from 'react-bootstrap/Button';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -18,12 +18,14 @@ export const Home = () => {
       try {
         //Se quisermos ver todos os temas,não apenas os que têm sala atribuida,podemos passar o param
         // "showTemasSemSala=true",por defeito é false
-        const response = await fetch("/gerir/temas/");
-        if (!response.ok) {
-          throw new Error(response.statusText);
-        }
-        const data = await response.json();
-        setTemas(data);
+        const response = await Axios.get("http://localhost:5206/api/gerir/temas").then((res) =>{
+            if (res.status!=200) {
+                throw new Error(res.statusText);
+              }
+              const data =res.data;
+              setTemas(data);
+        });
+        
       } catch (err) {
         setError(err.message);
       }
