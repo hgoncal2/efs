@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { json, Link } from "react-router-dom";
 import { getDifColor } from "../App";
 import { Routes, Route, useParams } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
@@ -9,8 +9,9 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import Axios from "axios";
 import Button from "react-bootstrap/Button";
+import { Alert } from "react-bootstrap";
 import Tooltip from "tooltip.js";
-import DialogEvent from "../App/Dialog"
+import { DialogEvent, DialogSelect } from '../App/Dialog';
 import ptLocale from "@fullcalendar/core/locales/pt";
 import { humanizeDuration } from "humanize-duration";
 
@@ -19,8 +20,10 @@ export const ReservasSala = (props) => {
   const [reservas, setReservas] = useState([]);
   const [events, setEvents] = useState([]);
   const [error, setError] = useState(null);
+  const [selected, setSelected] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [alert, setAlert] = useState(false); 
 
 
   const handleEventClick = (arg) => {
@@ -28,7 +31,28 @@ export const ReservasSala = (props) => {
     setShowDialog(true);
   };
 
-  const handleClose = () => setShowDialog(false);
+  const handleEventSelect= (arg) => {
+    setSelectedEvent(arg); 
+    setSelected(true);
+  };
+
+  const handleClose = () => {
+    setShowDialog(false);
+    setSelected(false)
+  }
+  const handleShowAlert = () => {
+    setAlert(true);
+    setTimeout(() => {
+      window.location.reload(); // Esconder o alerta após 3 segundos, por exemplo
+    }, 1500);
+};
+  const handleSelect = () => {
+      setSelected(true)
+  }
+
+function showDisplay(data){
+  return data > (new Date()) ? 'block' : 'background';
+}
 
   function makeCalendar(res) {
     const rLista = res.listaReservas.map((i) => {
@@ -40,6 +64,7 @@ export const ReservasSala = (props) => {
         title: `Reserva ${i.reservaId} - Sala ${res.salaNumero}`,
         start: reservaDate.toISOString(),
         end: reservaEndDate.toISOString(),
+        display: showDisplay(reservaEndDate),
         className: `${i.reservaId}`,
         description: `Reserva ${i.reservaId} - Sala ${res.salaNumero} `,
         extendedProps: {
@@ -47,9 +72,10 @@ export const ReservasSala = (props) => {
           idReserva: i.reservaId,
           dataI: reservaDate.toLocaleString(),
           dataF: reservaEndDate.toLocaleString(),
-
+          temaDif : res.temaDificuldade,
           temaNome: res.temaNome,
           sala: res.salaNumero,
+          anfs : i.anfitrioes,
           cancelada: i.cancelada,
           nPessoas: i.numPessoas,
           totalPreco: i.totalPreco,
@@ -60,18 +86,32 @@ export const ReservasSala = (props) => {
     setEvents(rLista);
   }
 
+
+  function devolveTemaJson(t){
+
+   let jsonVar = {
+      "preco" : t.temaPreco,
+      "minPessoas" : t.temaMinPessoas,
+      "maxPessoas": t.temaMaxPessoas,
+      "salaId":reservas.salaId
+    }
+    return jsonVar;
+      
+    
+  }
+
   useEffect(() => {
     const fetchReservas = async () => {
       try {
-        const response = await Axios.get("http://localhost:5206/api/reservasSala/" + id + "?showCanc=true").then((res) => {
+        const response = await Axios.get("http://localhost:5206/api/reservasSala/" + id + "?showCanc=true").then((res) =>{
           if (res.status!=200) {
-            throw new Error(res.statusText);
-          }
-          const data = res.data;
-          setReservas(data);
-          makeCalendar(data);
+              throw new Error(res.statusText);
+            }
+            const data = res.data;
+        setReservas(data);
+        makeCalendar(data);
       });
-        
+       
       } catch (err) {
         setError(err.message);
       }
@@ -91,13 +131,21 @@ export const ReservasSala = (props) => {
   console.log(events)
   console.log("waad")
   return (
+   
     <div>
+     {alert && <Alert variant="success">Reserva realizada com sucesso!</Alert>}
     {showDialog && <DialogEvent
         show={showDialog}
         handleClose={handleClose}
-        eventDetails={selectedEvent}
+        e={selectedEvent}
       />
       }
+
+      {selected && <DialogSelect show={selected}
+        handleClose={handleClose} handleShowAlert={handleShowAlert}
+        e={selectedEvent} tema={devolveTemaJson(reservas)}/>}
+
+      
     
       <h2>Mostrar reservas para sala {reservas.salaNumero}</h2>
       <FullCalendar
@@ -116,7 +164,13 @@ export const ReservasSala = (props) => {
         timeZone="UTC"
         selectOverlap={false}
         nowIndicator={true}
-        selectable={false}
+        selectable={true}
+       
+        select={(arg) => {
+          console.log(arg.startStr)
+          {handleEventSelect(arg)}
+       
+        }}
         editable={false}
         eventDisplay="block"
         eventStartEditable={false}
