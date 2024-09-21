@@ -17,6 +17,11 @@
 .carousel-inner > .item > img, .carousel-inner > .item > a > img {
     width: 100%;
 }
+.strike-class {
+  text-decoration: line-through !important;
+  text-decoration-color:red !important;
+  text-decoration-thickness:4px !important;
+}
 
 
 

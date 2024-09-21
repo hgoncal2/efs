@@ -8,6 +8,8 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import Button from 'react-bootstrap/Button';
+import Tooltip from 'tooltip.js';
+import ptLocale from '@fullcalendar/core/locales/pt'; // Importando o locale português
 import { humanizeDuration } from 'humanize-duration';
 
 
@@ -96,11 +98,63 @@ setEvents(rLista);
   }
 
   return (
+    <div>
+    <h2>Mostrar reservas para sala {reservas.salaNumero}</h2>
     <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-            initialView="dayGridMonth"
-            events={events}
+            initialView="timeGridWeek"
+            events={events} 
+      slotEventOverlap={false}
+      resourceGroupField='groupId'
+      initialDate={new Date()} stickyHeaderDates={true}
+      slotDuration='00:15:00'
+      slotMinTime='06:00:00'
+      slotMaxTime='22:00:00'
+      hiddenDays={[0]}  
+      eventOverlap={false}
+      timeZone='UTC'
+      selectOverlap={false}
+      nowIndicator={true}
+      selectable={false}
+      editable={false}
+      eventDisplay='block'
+      eventStartEditable={false}
+      eventDurationEditable={false}
+      contentHeight='auto'
+      eventTextColor='white'
+      allDaySlot={false}
+      headerToolbar={{
+        left: 'prev,dayGridMonth',
+        center: 'title,today',
+        right: 'next,timeGridWeek'
+      }}
+      buttonText={{
+        today: 'Ver dia atual',
+        month: 'Ver mês',
+        week: 'Ver semana',
+        day: 'Ver dia'
+      }}
+      locale={ptLocale}
+
+      eventMouseEnter={(info) => {
+        info.el.style.cursor = 'pointer';
+      }}
+      eventDidMount={(info) => {
+        new Tooltip(info.el, {
+          title: info.event.extendedProps.description,
+          placement: 'top',
+          trigger: 'hover',
+          container: 'body',
+        });
+      }}
+      eventClassNames={(arg) => {
+        return arg.event.extendedProps.cancelada === "True" ? ['strike-class'] : ['textWhite'];
+      }}
+      selectAllow={(info) => {
+        return info.start >= new Date();
+      }}
         />
+        </div>
   )
 }
 
