@@ -12,6 +12,7 @@ import { Alert } from "react-bootstrap";
 import { Temas } from './Pages/Temas';
 import { ReservasSala } from './Pages/ReservasSala.js';
 import { Salas } from './Pages/Salas';
+import { Sala } from './Pages/Sala';
 
 import  Axios  from 'axios';
 import { Login } from './Pages/Login.js';
@@ -113,6 +114,8 @@ function App()  {
         <Route path="/anfitrioes" element={<Anfs/>}></Route>
         <Route path="/anfitrioes/:id" element={<ReservasSala/>}></Route>
         <Route path="/salas" element={<Salas/>}></Route>
+        <Route path="/salas/:id" element={<Sala/>}></Route>
+
       </Routes>
     </Router>
     </div>
