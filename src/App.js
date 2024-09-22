@@ -11,6 +11,8 @@ import { Alert } from "react-bootstrap";
 
 import { Temas } from './Pages/Temas';
 import { ReservasSala } from './Pages/ReservasSala.js';
+import { Salas } from './Pages/Salas';
+
 import  Axios  from 'axios';
 import { Login } from './Pages/Login.js';
 import Cookies from 'js-cookie';
@@ -106,7 +108,7 @@ function App()  {
         <Route path="/temas" element={<Temas/>}></Route>
         <Route path="/temas/reserva/:id" element={<ReservasSala/>}></Route>
         <Route path="/login" element={<Login/>}></Route>
-
+        <Route path="/salas" element={<Salas/>}></Route>
       </Routes>
     </Router>
     </UserContext.Provider>
