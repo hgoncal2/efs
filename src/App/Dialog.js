@@ -2,9 +2,9 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { addHours } from "date-fns";
-import { X } from 'react-bootstrap-icons';
+import { SlashCircle, X,slashCircle } from 'react-bootstrap-icons';
 import { pt } from 'date-fns/locale'
-import { intlFormatDistance } from "date-fns";
+import { formatRelative } from "date-fns";
 import  Axios  from "axios";
 import {Alert}  from "react-bootstrap";
 import Tippy from '@tippyjs/react';
@@ -56,7 +56,11 @@ export const DialogSelect = ({ show, handleClose, handleShowAlert,e, salaId,tema
             if (res.status!=200) {
                 throw new Error(res.statusText);
               }else{
-                handleShowAlert("Reserva realizada com sucesso!")
+                handleShowAlert({
+                  msg:"Reserva realizada com sucesso!",
+                  style:"success"
+                
+              })
                 handleClose()
               }
              
@@ -117,7 +121,7 @@ export const DialogSelect = ({ show, handleClose, handleShowAlert,e, salaId,tema
 
 }
 
-export const DialogEvent = ({ show, handleClose,handleShowAlertDismissable, e }) => {
+export const DialogEvent = ({ show, handleClose,handleShowAlert, e }) => {
   let disabled = e.dataI
 
   async function handleCancelaReserva(id){
@@ -127,7 +131,7 @@ export const DialogEvent = ({ show, handleClose,handleShowAlertDismissable, e })
         if (res.status!=200) {
             throw new Error(res.statusText);
           }else{
-            handleShowAlertDismissable({
+            handleShowAlert({
              msg: "Reserva cancelada com sucesso!",
              style:'success'
           })
@@ -146,7 +150,7 @@ export const DialogEvent = ({ show, handleClose,handleShowAlertDismissable, e })
       <Modal  show={show} onHide={handleClose}>
         <Modal.Header closeButton>
         {showCancel(e.cancelada)}
-          <Modal.Title>Reserva nº {e.idReserva} - {intlFormatDistance(e.dataInicialDate,new Date())}
+          <Modal.Title>Reserva nº {e.idReserva} - {formatRelative(e.dataInicialDate,new Date(),{locale:pt})}
          
           
           </Modal.Title>
@@ -171,6 +175,11 @@ export const DialogEvent = ({ show, handleClose,handleShowAlertDismissable, e })
             <div className="mt-2 text-center  ">
               Tema: <span className={`text-${e.temaDif}`}>{e.temaNome}</span>
             </div>
+            <div class="mt-2 text-center  ">
+    
+     Preço Total: <span class="text-success">{e.totalPreco}€</span>
+    
+</div>
             <div className="mt-2 text-center  ">
             <GeraAnfs anfs={e.anfs}></GeraAnfs>
             </div>
@@ -184,6 +193,7 @@ export const DialogEvent = ({ show, handleClose,handleShowAlertDismissable, e })
  content={!(addHours(new Date(),48) <= e.dataInicialDate) ? 'As reservas apenas podem ser canceladas até 48h antes da data marcada' : 'Cancelar reserva'}>
  <div>
           <Button variant="danger" hidden={e.cancelada} disabled={!(addHours(new Date(),48) <= e.dataInicialDate)} onClick={ () => handleCancelaReserva(e.idReserva)}>
+          <SlashCircle className="text-white me-3" size={20}></SlashCircle>
             Cancelar reserva
           </Button>
           </div>

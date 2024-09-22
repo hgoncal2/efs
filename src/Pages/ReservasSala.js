@@ -6,6 +6,9 @@ import { LinkContainer } from "react-router-bootstrap";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
+import Form from 'react-bootstrap/Form';
+import Cookies from 'js-cookie';
+
 import { UserContext } from '../App';
 
 import interactionPlugin from "@fullcalendar/interaction";
@@ -17,7 +20,7 @@ import Tooltip from "tooltip.js";
 import { DialogEvent, DialogSelect } from '../App/Dialog';
 import ptLocale from "@fullcalendar/core/locales/pt";
 import { pt } from 'date-fns/locale'
-import { intlFormatDistance } from "date-fns";
+import { formatRelative } from "date-fns";
 
 
 import { humanizeDuration } from "humanize-duration";
@@ -29,6 +32,7 @@ export const ReservasSala = (props) => {
   const [error, setError] = useState(null);
   const [selected, setSelected] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
+  const [verCanc,setVerCanc] = useState(Boolean(Cookies.get("verCanc")));
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [alert, setAlert] = useState(null); 
   const [alertDismissable, setAlertDismissable] = useState(null); 
@@ -40,6 +44,14 @@ export const ReservasSala = (props) => {
     setSelectedEvent(arg.event.extendedProps); 
     setShowDialog(true);
   };
+
+  
+
+  const handleVerCanc = (arg) => {
+    console.log(verCanc)
+    Cookies.set("verCanc",Boolean(arg))
+    setVerCanc(Boolean(arg));
+  }
 
   const handleEventSelect= (arg) => {
     setSelectedEvent(arg); 
@@ -59,7 +71,7 @@ export const ReservasSala = (props) => {
     setAlert(msg);
     setTimeout(() => {
       window.location.reload(); // Esconder o alerta após 3 segundos, por exemplo
-    }, 1500);
+    }, 1200);
 };
   const handleSelect = () => {
       setSelected(true)
@@ -83,10 +95,7 @@ function getEventColor(client,u){
       const isPast = reservaDate < new Date();
       return {
         id: i.reservaId,
-        title: intlFormatDistance(
-          reservaDate,
-          new Date()
-        ),
+        title: formatRelative(reservaDate,new Date(),{locale:pt}),
         start: reservaDate.toISOString(),
         end: reservaEndDate.toISOString(),
         display: showDisplay(reservaEndDate),
@@ -130,14 +139,18 @@ function getEventColor(client,u){
 
   useEffect(() => {
     const fetchReservas = async () => {
+      
       try {
-        const response = await Axios.get("http://localhost:5206/api/reservasSala/" + id + "?showCanc=true").then((res) =>{
+        console.log(verCanc)
+        const response = await Axios.get("http://localhost:5206/api/reservasSala/" + id + "?showCanc=" + (verCanc == null ? 'true' : verCanc)).then((res) =>{
           if (res.status!=200) {
               throw new Error(res.statusText);
             }
             const data = res.data;
+           
         setReservas(data);
         makeCalendar(data);
+
       });
        
       } catch (err) {
@@ -148,7 +161,7 @@ function getEventColor(client,u){
       username = user.username;
     }
     fetchReservas();
-  }, [user]);
+  }, [user,verCanc]);
   //Faz com que a função seja executada sempre que o valor de User muda,que é o que nos queremos
 
  
@@ -159,15 +172,18 @@ function getEventColor(client,u){
       </div>
     );
   }
+
   
   return (
    
     <div>
      {(alertDismissable != null) && <Alert dismissible onClose={() => setAlertDismissable(null)} variant={alertDismissable.style}>{alertDismissable.msg}</Alert>}
+     {(alert != null) && <Alert variant={alert.style}>{alert.msg}</Alert>}
+
     {showDialog && <DialogEvent
         show={showDialog}
         handleClose={handleClose}
-        handleShowAlertDismissable={handleShowAlertDismissable}
+        handleShowAlert={handleShowAlert}
         e={selectedEvent}
       />
       }
@@ -176,9 +192,23 @@ function getEventColor(client,u){
         handleClose={handleClose} handleShowAlert={handleShowAlert}
         e={selectedEvent} tema={devolveTemaJson(reservas)}/>}
 
-      
+<h2>Mostrar reservas para sala {reservas.salaNumero}</h2>
     
-      <h2>Mostrar reservas para sala {reservas.salaNumero}</h2>
+<Form className="float-end">
+  Ver canceladas
+      <Form.Check // prettier-ignore
+        type="switch" checked={verCanc} onChange={(e) => handleVerCanc(e.target.checked)}
+        id="custom-switch" className="float-left"
+       
+      />
+      
+    </Form>
+    <br></br>
+    
+
+     
+  
+  
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="timeGridWeek"
