@@ -13,6 +13,7 @@ import { Temas } from './Pages/Temas';
 import { ReservasSala } from './Pages/ReservasSala.js';
 import { Salas } from './Pages/Salas';
 
+
 import  Axios  from 'axios';
 import { Login } from './Pages/Login.js';
 import Cookies from 'js-cookie';
@@ -20,6 +21,8 @@ import Cookies from 'js-cookie';
 import { NotFound } from './Pages/404';
 import { useState,useEffect,createContext  } from 'react';
 import Anfs from './Pages/Anfitrioes.js';
+import EditaAnf from './Pages/EditaAnf.js';
+import CriaAnfitriao from './Pages/CriaAnfitriao.js/index.js';
 
 export function getDifColor(difficulty){
 
@@ -38,6 +41,8 @@ function App()  {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const [logoutSucc, setLogoutSucc] = useState(false);
+  const [alert, setAlert] = useState(null);
+
   
   const handleLogOut = async () => {
   
@@ -92,11 +97,13 @@ function App()  {
   if(user != null && window.location.pathname =="/login"){
  //   window.location.pathname="/";
   }
+  
 
   return (
     
     <div className='App' >
  {logoutSucc && <Alert variant="success" dismissible onClose={() => setLogoutSucc(false)}>Logout com sucesso!</Alert>}
+ {alert && <Alert variant={alert.style}  onClose={() => setAlert(null)}>{alert.msg}</Alert>}
 
 <UserContext.Provider value={{ user: user, setUser: setUser }}>
 
@@ -107,12 +114,13 @@ function App()  {
     <Router>
       <Routes>
         <Route path="/" element={<Home/>}></Route>
-        <Route path="/temas" element={<Temas/>}></Route>
+        <Route exact  path="/temas" element={<Temas/>}></Route>
         <Route path="/temas/reserva/:id" element={<ReservasSala/>}></Route>
-        <Route path="/login" element={<Login/>}></Route>
-        <Route path="/anfitrioes" element={<Anfs/>}></Route>
-        <Route path="/anfitrioes/:id" element={<ReservasSala/>}></Route>
-        <Route path="/salas" element={<Salas/>}></Route>
+        <Route exact  path="/login" element={<Login/>}></Route>
+        <Route exact path="/anfitrioes" element={<Anfs/>}></Route>
+        <Route path="/anfitrioes/:id" element={<EditaAnf></EditaAnf>}></Route>
+        <Route exact  path="/salas" element={<Salas/>}></Route>
+        <Route exact  path="/criaAnfitriao" element={<CriaAnfitriao/>}></Route>
       </Routes>
     </Router>
     </div>

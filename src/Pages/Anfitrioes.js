@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { getDifColor } from "../App";
 import {LinkContainer} from "react-router-bootstrap";
 import { UserContext } from '../App';
-import { PencilFill } from "react-bootstrap-icons";
+import { PencilFill,Plus } from "react-bootstrap-icons";
 import Axios from "axios";
 import Button from 'react-bootstrap/Button';
 import { Card,Stack } from "react-bootstrap";
@@ -76,12 +76,12 @@ export const Anfs = () => {
           <Card.Title>{row.username}</Card.Title>
           <Card.Img variant="top" src="http://localhost:5206/imagens/defaultUser.jpg" />
           <Card.Text>
-           Email: <bold>{row.email}</bold>
+           Email: {row.email}
           </Card.Text>
           <Card.Footer className="bg-secondary">
          {constroiFooterRoles({roles:row.roles})}
             Anfitrião orgulhoso desde {format(new Date(row.dataCriacao), 'dd-mm-yyyy')}
-             {(user != null && user.username==row.username) && <Button variant="primary"><PencilFill className="me-2"></PencilFill>Editar</Button>  }
+             {(user != null && (user.username==row.username || user.roles.includes("Admin"))) && <LinkContainer to={`/anfitrioes/${row.id}`}><Button variant="primary"><PencilFill className="me-2" as="a"></PencilFill>Editar</Button></LinkContainer>  }
             
           </Card.Footer>
           
@@ -95,7 +95,9 @@ export const Anfs = () => {
     
     return (
 <div>
-<Stack direction="horizontal" gap={3}>
+{(user != null && user.roles.includes("Admin")) &&<div className="mb-5 "> <LinkContainer to={`/criaAnfitriao`}><Button variant="primary"><Plus className="me-2 " as="a"></Plus>Criar Anfitrião</Button></LinkContainer> </div> }
+
+<Stack direction="horizontal" gap={3} className="ms-5 h-100 flex-wrap">
   {rows}  
   </Stack>
 </div>
@@ -113,6 +115,7 @@ export const Anfs = () => {
     <div className="home">
       <section className="titulo">
         <ConstroiAnfs dados={anfs}></ConstroiAnfs>
+        
       </section>
     </div>
   );

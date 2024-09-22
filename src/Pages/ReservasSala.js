@@ -278,7 +278,7 @@ function getEventColor(client,u){
           });
         }}
         eventClick={(arg) => {
-          {user.username == arg.event.extendedProps.clientUsername && handleEventClick(arg) }
+          {((user.username == arg.event.extendedProps.clientUsername) || user.roles.includes("Admin") || arg.event.extendedProps.anfs.includes(user.username) )&& handleEventClick(arg) }
           
        
         }}
