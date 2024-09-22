@@ -2,14 +2,18 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 
 import Toast from 'react-bootstrap/Toast';
 import Button from 'react-bootstrap/Button';
 
 
+import { UserContext } from '../App';
+
+
 
 function NavBar() {
+  const { user, setUser } = useContext(UserContext);
   return (
     <Navbar expand="lg" className="bg-primary" data-bs-theme="light" >
       <Container>
@@ -34,7 +38,8 @@ function NavBar() {
            
           </Nav>
           <Nav className="ms-auto me-0 float-end">
-          <Nav.Link href="/login" className='text-body'>Login</Nav.Link>
+          {user == null ? <Nav.Link href="/login" className='text-body'>Login</Nav.Link> : <span>{user.username}</span> }
+          
 
           </Nav>
         </Navbar.Collapse>

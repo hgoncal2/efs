@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useContext } from "react";
 import { json, Link } from "react-router-dom";
 import { getDifColor } from "../App";
 import { Routes, Route, useParams } from "react-router-dom";
@@ -6,10 +6,13 @@ import { LinkContainer } from "react-router-bootstrap";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
+import { UserContext } from '../App';
+
 import interactionPlugin from "@fullcalendar/interaction";
 import Axios from "axios";
 import Button from "react-bootstrap/Button";
 import { Alert } from "react-bootstrap";
+
 import Tooltip from "tooltip.js";
 import { DialogEvent, DialogSelect } from '../App/Dialog';
 import ptLocale from "@fullcalendar/core/locales/pt";
@@ -24,7 +27,8 @@ export const ReservasSala = (props) => {
   const [showDialog, setShowDialog] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [alert, setAlert] = useState(false); 
-
+  const { user, setUser } = useContext(UserContext);
+  let username = null;
 
   const handleEventClick = (arg) => {
     setSelectedEvent(arg.event.extendedProps); 
@@ -54,6 +58,12 @@ function showDisplay(data){
   return data > (new Date()) ? 'block' : 'background';
 }
 
+function getEventColor(client,u){
+
+ console.log({user})
+  return u.username == client ? '#a463eb' : '#2a602a';
+}
+
   function makeCalendar(res) {
     const rLista = res.listaReservas.map((i) => {
       const reservaDate = new Date(i.reservaDate);
@@ -66,10 +76,12 @@ function showDisplay(data){
         end: reservaEndDate.toISOString(),
         display: showDisplay(reservaEndDate),
         className: `${i.reservaId}`,
+        color: getEventColor(i.clienteUsername,{username}),
         description: `Reserva ${i.reservaId} - Sala ${res.salaNumero} `,
         extendedProps: {
           nome: `${i.clientePrimeiroNome} ${i.clienteUltimoNome}`,
           idReserva: i.reservaId,
+          clientUsername : `${i.clienteUsername}`,
           dataI: reservaDate.toLocaleString(),
           dataF: reservaEndDate.toLocaleString(),
           temaDif : res.temaDificuldade,
@@ -116,11 +128,13 @@ function showDisplay(data){
         setError(err.message);
       }
     };
-
+    if(user != null){
+      username = user.username;
+    }
     fetchReservas();
   }, []);
 
-  console.log(reservas);
+ 
   if (reservas.length === 0 || !reservas) {
     return (
       <div>
@@ -128,8 +142,7 @@ function showDisplay(data){
       </div>
     );
   }
-  console.log(events)
-  console.log("waad")
+  
   return (
    
     <div>
@@ -167,7 +180,7 @@ function showDisplay(data){
         selectable={true}
        
         select={(arg) => {
-          console.log(arg.startStr)
+          
           {handleEventSelect(arg)}
        
         }}
@@ -176,6 +189,7 @@ function showDisplay(data){
         eventStartEditable={false}
         eventDurationEditable={false}
         contentHeight="auto"
+        
         eventTextColor="white"
         allDaySlot={false}
         headerToolbar={{
@@ -202,8 +216,8 @@ function showDisplay(data){
           });
         }}
         eventClick={(arg) => {
-          console.log(arg.event.extendedProps)
-          {handleEventClick(arg)}
+          {user.username == arg.event.extendedProps.clientUsername && handleEventClick(arg) }
+          
        
         }}
         eventClassNames={(arg) => {
@@ -212,6 +226,7 @@ function showDisplay(data){
             : ["textWhite"];
         }}
         selectAllow={(info) => {
+          
           return info.start >= new Date();
         }}
       />
