@@ -14,6 +14,26 @@
     animation: App-logo-spin infinite 20s linear;
   }
 }
+.navbar-default{ /* assigning the top bar to the entire navbar div element */
+  text-align: center;
+  box-shadow: inset 0px 6px 0px #777; /* initial gray color to the top bar */   
+}
+.anfs:hover{
+  background-color: red;
+}
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+  color: white;
+  background-color: #AAA;
+  box-shadow: inset 0px 6px 0px #000; /* switch to a darker color on hover */
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+  color: white;
+  background-color: gray;
+  box-shadow: inset 0px 6px 0px #AAA; /* switch to a lighter color for active element */
+}
 .carousel-inner > .item > img, .carousel-inner > .item > a > img {
     width: 100%;
 }

@@ -15,7 +15,9 @@ import Tippy from '@tippyjs/react';
 const GeraAnfs = (props) => {
 console.log(props.anfs)
 const anfs = props.anfs.map((i) => (
-<li key={i.userId} className='list-group-item text-white bg-warning flex-fill ms-2'>{i.username}</li>
+  <a key={i.userId} href={"/anfitrioes#"+ i.username} className="text-decoration-none ">
+<li  className='list-group-item text-white bg-warning flex-fill ms-2'>{i.username}</li>
+</a>
 ))
 
 return (

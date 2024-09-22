@@ -21,7 +21,7 @@ function NavBar({handleLogOut}) {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="/temas" className='text-body'>Temas</Nav.Link>
+            <Nav.Link href="/anfitrioes" className='text-body'>Anfitrioes</Nav.Link>
             {/* <Nav.Link href="#link" className='text-light'>Link</Nav.Link> */}
             
            

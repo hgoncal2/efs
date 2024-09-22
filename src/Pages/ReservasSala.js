@@ -44,7 +44,6 @@ export const ReservasSala = (props) => {
     setSelectedEvent(arg.event.extendedProps); 
     setShowDialog(true);
   };
-
   
 
   const handleVerCanc = (arg) => {
