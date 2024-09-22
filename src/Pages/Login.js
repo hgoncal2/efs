@@ -4,7 +4,7 @@ import Axios from "axios";
 import { Form, Button, Container, Row, Col, Alert } from 'react-bootstrap';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { TextLeft } from "react-bootstrap-icons";
+import { Border, BorderBottom, TextLeft } from "react-bootstrap-icons";
 
 export const Login = () => {
   const [error, setError] = useState('');
@@ -45,17 +45,18 @@ export const Login = () => {
   };
 
   return (
-    <Container  style={{color: 'purple', display: 'flex'}}>
+    <Container  style={{float:'left ', color: '#6495ED ', display: 'flex ', width:'300vh '}}>
     <div className="row">
       <div col-md={4}>
-        <div>
-            <h2 style={{display:'flex', width:'100%'}}>Login</h2>
+        <div style={{margin:"10px 10px 30px 15px "}}>
+            <h2 style={{display:'flex ', width:'100% '}}>Login</h2>
         </div>
         <form onSubmit={login}>
           <div style={{margin:'10px 10px 10px 0px'}} >
-            <label style={{float:'left' }} htmlFor="Username">Username</label>
+            <label style={{float:'left ' }} htmlFor="Username">Username</label>
             <br />
-            <input
+            <input            
+              style={{backgroundColor:'#6495ED'}}
               type="text"
               id="username"
               value={username}
@@ -64,9 +65,10 @@ export const Login = () => {
           </div>
          
           <div style={{margin:'10px 10px 10px 0px'}}>
-            <label style={{float:'left'}} htmlFor="Password">Password</label>
+            <label style={{float:'left '}} htmlFor="Password">Password</label>
             <br />
             <input
+              style={{backgroundColor:'#6495ED'}}
               type="password"
               id="password"
               value={password}
