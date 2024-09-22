@@ -9,6 +9,9 @@ import { format } from "date-fns";
 export const Salas = () => {
   const [salas, setSalas] = useState([]);
   const [error, setError] = useState(null);
+  const [deleted, setDeleted] = useState('');
+  const [alert, setAlert] = useState(null); 
+
 
   const GeraAnfs = (props) => {
     console.log(props.anfs)
@@ -24,6 +27,13 @@ export const Salas = () => {
     )
     
     }
+
+    const handleShowAlert = (msg) => {
+      setAlert(msg);
+      setTimeout(() => {
+        window.location.reload(); // Esconder o alerta após 3 segundos, por exemplo
+      }, 1200);
+  };
 
   useEffect(() => {
     const fetchSalas = async () => {
@@ -43,6 +53,19 @@ export const Salas = () => {
 
     fetchSalas();
   }, []);
+
+  const deleteSala = async(salaId) => {
+    try{
+      const response = await Axios.delete("http://localhost:5206/api/gerir/salas/" + salaId, {withCredentials: true});
+      if(response.status == 200){
+        setDeleted('Sala apagada com sucesso!');
+      }else{
+        throw new Error('Erro ao apagar Sala!');
+      }
+    }catch(err){
+      setError('Erro ao apagar Sala!');
+    }
+  }
 
   if (error) {
     return (
@@ -87,7 +110,7 @@ export const Salas = () => {
                     <LinkContainer to={`/salas/${row.salaId}`}>
                         <Button className={`btn btn-outline-dark`} >VER SALA</Button>
                     </LinkContainer>
-                    <Button className={`btn btn-outline-danger`} >Apagar</Button>
+                    <Button className={`btn btn-outline-danger`} onClick={() => deleteSala(row.salaId)} handleShowAlert={"AAAAAAAAAAAAAA"}>Apagar</Button>
                 </div>
             </td>
         </tr>
@@ -97,39 +120,39 @@ export const Salas = () => {
     ));
     
     return (
-<table className="table">
-    <thead>
-        <th>
-            SalaId
-        </th>
-        <th>
-            Número da Sala
-        </th>
-        <th>
-            Área (m2)
-        </th>
-        <th>
-            Anfitriões
-        </th>
-        <th>
-            Número de Reservas
-        </th>
-        <th>
-            Data de Criação
-        </th>
-        <th>
-            Criado Por
-        </th>
-        <th>
-            Ações
-        </th>
-    </thead>
+      <table className="table">
+          <thead>
+              <th>
+                  SalaId
+              </th>
+              <th>
+                  Número da Sala
+              </th>
+              <th>
+                  Área (m2)
+              </th>
+              <th>
+                  Anfitriões
+              </th>
+              <th>
+                  Número de Reservas
+              </th>
+              <th>
+                  Data de Criação
+              </th>
+              <th>
+                  Criado Por
+              </th>
+              <th>
+                  Ações
+              </th>
+          </thead>
 
-    <tbody>
-        {rows}
+          <tbody>
+              {rows}
 
-    </tbody>
-</table>
+          </tbody>
+      </table>
 
     )
   };

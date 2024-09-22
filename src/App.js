@@ -13,6 +13,7 @@ import { Temas } from './Pages/Temas';
 import { ReservasSala } from './Pages/ReservasSala.js';
 import { Salas } from './Pages/Salas';
 
+import { Sala } from './Pages/Sala';
 
 import  Axios  from 'axios';
 import { Login } from './Pages/Login.js';
@@ -116,11 +117,10 @@ function App()  {
         <Route path="/" element={<Home/>}></Route>
         <Route exact  path="/temas" element={<Temas/>}></Route>
         <Route path="/temas/reserva/:id" element={<ReservasSala/>}></Route>
-        <Route exact  path="/login" element={<Login/>}></Route>
-        <Route exact path="/anfitrioes" element={<Anfs/>}></Route>
-        <Route path="/anfitrioes/:id" element={<EditaAnf></EditaAnf>}></Route>
-        <Route exact  path="/salas" element={<Salas/>}></Route>
-        <Route exact  path="/criaAnfitriao" element={<CriaAnfitriao/>}></Route>
+        <Route path="/login" element={<Login/>}></Route>
+        <Route path="/anfitrioes" element={<Anfs/>}></Route>
+        <Route path="/anfitrioes/:id" element={<ReservasSala/>}></Route>
+        <Route path="/salas" element={<Salas/>}></Route>
       </Routes>
     </Router>
     </div>
