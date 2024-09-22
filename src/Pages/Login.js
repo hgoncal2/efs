@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import Axios from "axios";
+import { Form, Button, Container, Row, Col, Alert } from 'react-bootstrap';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { TextLeft } from "react-bootstrap-icons";
 
 export const Login = () => {
   const [error, setError] = useState('');
@@ -36,17 +39,22 @@ export const Login = () => {
 
     } catch (err) {
       // Mostra o erro se algo der errado
-      setError(err.message);
+      setError("Dados Inválidos");
       console.error('Erro:', err);
     }
   };
 
   return (
+    <Container  style={{color: 'purple', display: 'flex'}}>
     <div className="row">
-      <div className="col-md-4">
+      <div col-md={4}>
+        <div>
+            <h2 style={{display:'flex', width:'100%'}}>Login</h2>
+        </div>
         <form onSubmit={login}>
-          <div>
-            <label htmlFor="Username">Username</label>
+          <div style={{margin:'10px 10px 10px 0px'}} >
+            <label style={{float:'left' }} htmlFor="Username">Username</label>
+            <br />
             <input
               type="text"
               id="username"
@@ -54,8 +62,10 @@ export const Login = () => {
               onChange={(e) => setUsername(e.target.value)}
             />
           </div>
-          <div>
-            <label htmlFor="Password">Password</label>
+         
+          <div style={{margin:'10px 10px 10px 0px'}}>
+            <label style={{float:'left'}} htmlFor="Password">Password</label>
+            <br />
             <input
               type="password"
               id="password"
@@ -63,11 +73,12 @@ export const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <button type="submit">Login</button>
-          {error && <p style={{ color: 'red' }}>{error}</p>}
+          <button className="btn btn-info" style={{margin: '10px', display: 'flex', color:'purple'}} type="submit">Login</button>
+          {error && <p style={{ color: 'red', font:'bold' }}>{error}</p>}
         </form>
       </div>
     </div>
+    </Container>
   );
 };
 
