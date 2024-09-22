@@ -1,9 +1,14 @@
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import { addHours } from "date-fns";
 import { X } from 'react-bootstrap-icons';
+import { pt } from 'date-fns/locale'
+import { intlFormatDistance } from "date-fns";
 import  Axios  from "axios";
 import {Alert}  from "react-bootstrap";
+import Tippy from '@tippyjs/react';
+
 
 
 
@@ -34,6 +39,10 @@ function showCancel(canc){
 
 export const DialogSelect = ({ show, handleClose, handleShowAlert,e, salaId,tema}) =>{
     const [alert, setAlert] = useState(false);
+    
+
+     
+     
 
     async function handleConfirmReserva(props){
         try {
@@ -47,7 +56,7 @@ export const DialogSelect = ({ show, handleClose, handleShowAlert,e, salaId,tema
             if (res.status!=200) {
                 throw new Error(res.statusText);
               }else{
-                handleShowAlert()
+                handleShowAlert("Reserva realizada com sucesso!")
                 handleClose()
               }
              
@@ -108,13 +117,36 @@ export const DialogSelect = ({ show, handleClose, handleShowAlert,e, salaId,tema
 
 }
 
-export const DialogEvent = ({ show, handleClose, e }) => {
+export const DialogEvent = ({ show, handleClose,handleShowAlertDismissable, e }) => {
+  let disabled = e.dataI
+
+  async function handleCancelaReserva(id){
+    try {
+      const response = await Axios.put("http://localhost:5206/api/reservas/"+id,{},
+        { withCredentials: true }).then((res) =>{
+        if (res.status!=200) {
+            throw new Error(res.statusText);
+          }else{
+            handleShowAlertDismissable({
+             msg: "Reserva cancelada com sucesso!",
+             style:'success'
+          })
+            handleClose()
+          }
+         
+    });
+     
+    } catch (err) {
+      //setError(err.message);
+    }
+  };
+ 
   return (
     <>
       <Modal  show={show} onHide={handleClose}>
         <Modal.Header closeButton>
         {showCancel(e.cancelada)}
-          <Modal.Title>Reserva nº {e.idReserva}
+          <Modal.Title>Reserva nº {e.idReserva} - {intlFormatDistance(e.dataInicialDate,new Date())}
          
           
           </Modal.Title>
@@ -145,12 +177,17 @@ export const DialogEvent = ({ show, handleClose, e }) => {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
+          <Button variant="success" onClick={handleClose}>
+            Fechar
           </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
+          <Tippy  allowHTML={true}
+ content={!(addHours(new Date(),48) <= e.dataInicialDate) ? 'As reservas apenas podem ser canceladas até 48h antes da data marcada' : 'Cancelar reserva'}>
+ <div>
+          <Button variant="danger" hidden={e.cancelada} disabled={!(addHours(new Date(),48) <= e.dataInicialDate)} onClick={ () => handleCancelaReserva(e.idReserva)}>
+            Cancelar reserva
           </Button>
+          </div>
+          </Tippy>
         </Modal.Footer>
       </Modal>
     </>

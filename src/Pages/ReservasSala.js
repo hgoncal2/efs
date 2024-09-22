@@ -16,6 +16,10 @@ import { Alert } from "react-bootstrap";
 import Tooltip from "tooltip.js";
 import { DialogEvent, DialogSelect } from '../App/Dialog';
 import ptLocale from "@fullcalendar/core/locales/pt";
+import { pt } from 'date-fns/locale'
+import { intlFormatDistance } from "date-fns";
+
+
 import { humanizeDuration } from "humanize-duration";
 
 export const ReservasSala = (props) => {
@@ -26,7 +30,9 @@ export const ReservasSala = (props) => {
   const [selected, setSelected] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const [alert, setAlert] = useState(false); 
+  const [alert, setAlert] = useState(null); 
+  const [alertDismissable, setAlertDismissable] = useState(null); 
+
   const { user, setUser } = useContext(UserContext);
   let username = null;
 
@@ -44,8 +50,13 @@ export const ReservasSala = (props) => {
     setShowDialog(false);
     setSelected(false)
   }
-  const handleShowAlert = () => {
-    setAlert(true);
+  const handleShowAlertDismissable = (msg) => {
+    setAlertDismissable(msg);
+   
+};
+
+  const handleShowAlert = (msg) => {
+    setAlert(msg);
     setTimeout(() => {
       window.location.reload(); // Esconder o alerta após 3 segundos, por exemplo
     }, 1500);
@@ -65,13 +76,17 @@ function getEventColor(client,u){
 }
 
   function makeCalendar(res) {
+    
     const rLista = res.listaReservas.map((i) => {
       const reservaDate = new Date(i.reservaDate);
       const reservaEndDate = new Date(i.reservaEndDate);
       const isPast = reservaDate < new Date();
       return {
         id: i.reservaId,
-        title: `Reserva ${i.reservaId} - Sala ${res.salaNumero}`,
+        title: intlFormatDistance(
+          reservaDate,
+          new Date()
+        ),
         start: reservaDate.toISOString(),
         end: reservaEndDate.toISOString(),
         display: showDisplay(reservaEndDate),
@@ -85,6 +100,7 @@ function getEventColor(client,u){
           dataI: reservaDate.toLocaleString(),
           dataF: reservaEndDate.toLocaleString(),
           temaDif : res.temaDificuldade,
+          dataInicialDate: reservaDate,
           temaNome: res.temaNome,
           sala: res.salaNumero,
           anfs : i.anfitrioes,
@@ -132,7 +148,8 @@ function getEventColor(client,u){
       username = user.username;
     }
     fetchReservas();
-  }, []);
+  }, [user]);
+  //Faz com que a função seja executada sempre que o valor de User muda,que é o que nos queremos
 
  
   if (reservas.length === 0 || !reservas) {
@@ -146,10 +163,11 @@ function getEventColor(client,u){
   return (
    
     <div>
-     {alert && <Alert variant="success">Reserva realizada com sucesso!</Alert>}
+     {(alertDismissable != null) && <Alert dismissible onClose={() => setAlertDismissable(null)} variant={alertDismissable.style}>{alertDismissable.msg}</Alert>}
     {showDialog && <DialogEvent
         show={showDialog}
         handleClose={handleClose}
+        handleShowAlertDismissable={handleShowAlertDismissable}
         e={selectedEvent}
       />
       }
@@ -180,7 +198,22 @@ function getEventColor(client,u){
         selectable={true}
        
         select={(arg) => {
-          
+          if(user == null){
+            handleShowAlertDismissable({
+             msg: "Por favor faça login para fazer reservas!",
+             style:'danger'
+          });   
+            return;
+          }else{
+              if(!user.roles.includes("Cliente")){
+                
+                handleShowAlertDismissable({
+             msg: "Apenas clientes podem fazer reservas!",
+             style:'danger'
+          });   
+                return;
+              }
+          }
           {handleEventSelect(arg)}
        
         }}

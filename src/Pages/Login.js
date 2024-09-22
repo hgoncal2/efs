@@ -1,12 +1,17 @@
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import { useNavigate } from 'react-router-dom';
 import Axios from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { UserContext } from '../App';
+import Cookies from 'js-cookie';
+
 
 export const Login = () => {
   const [error, setError] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const { user, setUser } = useContext(UserContext);
+
   const navigate = useNavigate(); // Para redirecionar após o login
 
   // Função de login
@@ -24,12 +29,17 @@ export const Login = () => {
 
       if (response.status === 200) {
         console.log('Login bem-sucedido:', response.data);
-
+        
         // Guarda o user no localStorage
-        localStorage.setItem('user', JSON.stringify(response.data));
+        sessionStorage.setItem('user', JSON.stringify(response.data));
+        
+
+        setUser(JSON.stringify(response.data))
 
         // Redireciona para a home page
-        navigate('/'); 
+       
+        
+        navigate(-1)
       } else {
         throw new Error('Erro ao fazer login');
       }
