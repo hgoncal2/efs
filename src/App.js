@@ -19,6 +19,7 @@ import Cookies from 'js-cookie';
 
 import { NotFound } from './Pages/404';
 import { useState,useEffect,createContext  } from 'react';
+import Anfs from './Pages/Anfitrioes.js';
 
 export function getDifColor(difficulty){
 
@@ -102,15 +103,19 @@ function App()  {
     <header >
         <NavBar handleLogOut={handleLogOut} />
       </header>
+      <div className='mt-5'>
     <Router>
       <Routes>
         <Route path="/" element={<Home/>}></Route>
         <Route path="/temas" element={<Temas/>}></Route>
         <Route path="/temas/reserva/:id" element={<ReservasSala/>}></Route>
         <Route path="/login" element={<Login/>}></Route>
+        <Route path="/anfitrioes" element={<Anfs/>}></Route>
+        <Route path="/anfitrioes/:id" element={<ReservasSala/>}></Route>
         <Route path="/salas" element={<Salas/>}></Route>
       </Routes>
     </Router>
+    </div>
     </UserContext.Provider>
     </div>
   );
