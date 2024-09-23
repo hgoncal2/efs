@@ -126,7 +126,8 @@ console.log(user)
     ));
     
     return (
-      <table className="table">
+      <div>
+        <table className="table">
           <thead>
               <th>
                   SalaId
@@ -158,8 +159,11 @@ console.log(user)
               {rows}
 
           </tbody>
-      </table>
-
+        </table>
+        <LinkContainer to={`/criaSala`}>
+          <Button className={`btn btn-outline-dark`} >CRIAR SALA</Button>
+        </LinkContainer>
+      </div>
     )
   };
 
@@ -170,7 +174,7 @@ console.log(user)
     <div className="home">
       <section className="titulo">
         <Teste dados={salas}></Teste>
-      </section>
+      </section>     
     </div>
   );
 };

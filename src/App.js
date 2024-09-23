@@ -14,7 +14,7 @@ import { ReservasSala } from './Pages/ReservasSala.js';
 import { Salas } from './Pages/Salas';
 
 import EditaSala, { Sala } from './Pages/Sala';
-
+import { CriaSala } from './Pages/CriaSala';
 import  Axios  from 'axios';
 import { Login } from './Pages/Login.js';
 import Cookies from 'js-cookie';
@@ -122,7 +122,6 @@ function App()  {
         <Route path="/criaAnfitriao" element={<CriaAnfitriao/>}></Route>
         <Route path="/anfitrioes/:id" element={<EditaAnf/>}></Route>
         <Route path="/salas" element={<Salas/>}></Route>
-        <Route path="/salas/:id" element={<EditaSala/>}></Route>
       </Routes>
     </Router>
     </div>
