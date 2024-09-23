@@ -14,7 +14,7 @@ import { ReservasSala } from './Pages/ReservasSala.js';
 import { Salas } from './Pages/Salas';
 
 import { Sala } from './Pages/Sala';
-
+import { CriaSala } from './Pages/CriaSala';
 import  Axios  from 'axios';
 import { Login } from './Pages/Login.js';
 import Cookies from 'js-cookie';
@@ -23,7 +23,7 @@ import { NotFound } from './Pages/404';
 import { useState,useEffect,createContext  } from 'react';
 import Anfs from './Pages/Anfitrioes.js';
 import EditaAnf from './Pages/EditaAnf.js';
-import CriaAnfitriao from './Pages/CriaAnfitriao.js/index.js';
+import CriaAnfitriao from './Pages/CriaAnfitriao.js';
 
 export function getDifColor(difficulty){
 
@@ -121,6 +121,8 @@ function App()  {
         <Route path="/anfitrioes" element={<Anfs/>}></Route>
         <Route path="/anfitrioes/:id" element={<ReservasSala/>}></Route>
         <Route path="/salas" element={<Salas/>}></Route>
+        <Route path="/salas/:id" element={<Sala/>}></Route>
+        <Route path="/criasala" element={<CriaSala/>}></Route>
       </Routes>
     </Router>
     </div>

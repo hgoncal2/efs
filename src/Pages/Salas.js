@@ -120,7 +120,8 @@ export const Salas = () => {
     ));
     
     return (
-      <table className="table">
+      <div>
+        <table className="table">
           <thead>
               <th>
                   SalaId
@@ -152,8 +153,11 @@ export const Salas = () => {
               {rows}
 
           </tbody>
-      </table>
-
+        </table>
+        <LinkContainer to={`/criaSala`}>
+          <Button className={`btn btn-outline-dark`} >CRIAR SALA</Button>
+        </LinkContainer>
+      </div>
     )
   };
 
@@ -164,7 +168,7 @@ export const Salas = () => {
     <div className="home">
       <section className="titulo">
         <Teste dados={salas}></Teste>
-      </section>
+      </section>     
     </div>
   );
 };
