@@ -57,7 +57,7 @@ export const EditaAnf = () => {
         //Se quisermos ver todos os temas,não apenas os que têm sala atribuida,podemos passar o param
         // "showTemasSemSala=true",por defeito é false
         const response = await Axios.get(
-          "http://localhost:5206/api/gerir/anfs/" + id
+          "https://23327-a5cpgeh9hwevc7gp.northeurope-01.azurewebsites.net/api/gerir/anfs/" + id
         ).then((res) => {
           if (res.status != 200) {
             throw new Error(res.statusText);
@@ -116,7 +116,7 @@ if(mudarPassword && (novaPassword!=confirmNovaPassword)){
     //Se quisermos ver todos os temas,não apenas os que têm sala atribuida,podemos passar o param
     // "showTemasSemSala=true",por defeito é false
     const response = await Axios.put(
-      "http://localhost:5206/api/gerir/anfs/" + id,
+      "https://23327-a5cpgeh9hwevc7gp.northeurope-01.azurewebsites.net/api/gerir/anfs/" + id,
 
         formData
 

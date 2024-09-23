@@ -13,7 +13,7 @@ import { Temas } from './Pages/Temas';
 import { ReservasSala } from './Pages/ReservasSala.js';
 import { Salas } from './Pages/Salas';
 
-import { Sala } from './Pages/Sala';
+import EditaSala, { Sala } from './Pages/Sala';
 
 import  Axios  from 'axios';
 import { Login } from './Pages/Login.js';
@@ -23,7 +23,7 @@ import { NotFound } from './Pages/404';
 import { useState,useEffect,createContext  } from 'react';
 import Anfs from './Pages/Anfitrioes.js';
 import EditaAnf from './Pages/EditaAnf.js';
-import CriaAnfitriao from './Pages/CriaAnfitriao.js/index.js';
+import CriaAnfitriao from './Pages/CriaAnfitriao.js';
 
 export function getDifColor(difficulty){
 
@@ -48,7 +48,7 @@ function App()  {
   const handleLogOut = async () => {
   
     try {
-      const response = await Axios.put("http://localhost:5206/api/gerir/account",{},{withCredentials:true}).then((res) =>{
+      const response = await Axios.put("https://23327-a5cpgeh9hwevc7gp.northeurope-01.azurewebsites.net/api/gerir/account",{},{withCredentials:true}).then((res) =>{
         if (res.status!=200) {
             throw new Error(res.statusText);
           }
@@ -77,7 +77,7 @@ function App()  {
     
     const verificaLogIn = async () => {
       try {
-        const response = await Axios.get("http://localhost:5206/api/gerir/account",{withCredentials:true}).then((res) =>{
+        const response = await Axios.get("https://23327-a5cpgeh9hwevc7gp.northeurope-01.azurewebsites.net/api/gerir/account",{withCredentials:true}).then((res) =>{
           if (res.status!=200) {
               throw new Error(res.statusText);
             }
@@ -119,8 +119,10 @@ function App()  {
         <Route path="/temas/reserva/:id" element={<ReservasSala/>}></Route>
         <Route path="/login" element={<Login/>}></Route>
         <Route path="/anfitrioes" element={<Anfs/>}></Route>
-        <Route path="/anfitrioes/:id" element={<ReservasSala/>}></Route>
+        <Route path="/criaAnfitriao" element={<CriaAnfitriao/>}></Route>
+        <Route path="/anfitrioes/:id" element={<EditaAnf/>}></Route>
         <Route path="/salas" element={<Salas/>}></Route>
+        <Route path="/salas/:id" element={<EditaSala/>}></Route>
       </Routes>
     </Router>
     </div>

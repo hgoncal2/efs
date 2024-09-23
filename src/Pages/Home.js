@@ -18,7 +18,7 @@ export const Home = () => {
       try {
         //Se quisermos ver todos os temas,não apenas os que têm sala atribuida,podemos passar o param
         // "showTemasSemSala=true",por defeito é false
-        const response = await Axios.get("http://localhost:5206/api/gerir/temas").then((res) =>{
+        const response = await Axios.get("https://23327-a5cpgeh9hwevc7gp.northeurope-01.azurewebsites.net/api/gerir/temas").then((res) =>{
             if (res.status!=200) {
                 throw new Error(res.statusText);
               }
@@ -54,7 +54,7 @@ export const Home = () => {
         >
           <td style={{ width: "50%" }}>
 
-          <img className="d-block w-100" style={{ height: "300px" }} src={`http://localhost:5206/Imagens/${row.listaDeFotos[1]}`} alt="First slide" title={row.nome} />
+          <img className="d-block w-100" style={{ height: "300px" }} src={`https://23327-a5cpgeh9hwevc7gp.northeurope-01.azurewebsites.net/Imagens/${row.listaDeFotos[1]}`} alt="First slide" title={row.nome} />
           </td>
           <td className="text-center">
           <div className="h3 text-center text-@c mt-4">

@@ -22,6 +22,7 @@ function NavBar({handleLogOut}) {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link href="/anfitrioes" className='text-body'>Anfitrioes</Nav.Link>
+           {user != null && (user.roles.includes("Anfitriao") || user.roles.includes("Admin") ) && <Nav.Link href="/salas" className='text-body'>Salas</Nav.Link>} 
             {/* <Nav.Link href="#link" className='text-light'>Link</Nav.Link> */}
             
            

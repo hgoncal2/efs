@@ -22,7 +22,7 @@ export const Login = () => {
 
     try {
       // Faz a requisição para a API
-      const response = await Axios.post("http://localhost:5206/api/gerir/account", {
+      const response = await Axios.post("https://23327-a5cpgeh9hwevc7gp.northeurope-01.azurewebsites.net/api/gerir/account", {
         username,  // Envia o username do estado
         password   // Envia o password do estado
       }, {

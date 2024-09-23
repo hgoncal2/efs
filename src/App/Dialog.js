@@ -48,7 +48,7 @@ export const DialogSelect = ({ show, handleClose, handleShowAlert,e, salaId,tema
 
     async function handleConfirmReserva(props){
         try {
-          const response = await Axios.post("http://localhost:5206/api/reservas/",{
+          const response = await Axios.post("https://23327-a5cpgeh9hwevc7gp.northeurope-01.azurewebsites.net/api/reservas/",{
             salaId:props.salaId,
             nPessoas:props.nPessoas,
             dataI:props.dataI
@@ -128,7 +128,7 @@ export const DialogEvent = ({ show, handleClose,handleShowAlert, e }) => {
 
   async function handleCancelaReserva(id){
     try {
-      const response = await Axios.put("http://localhost:5206/api/reservas/"+id,{},
+      const response = await Axios.put("https://23327-a5cpgeh9hwevc7gp.northeurope-01.azurewebsites.net/api/reservas/"+id,{},
         { withCredentials: true }).then((res) =>{
         if (res.status!=200) {
             throw new Error(res.statusText);

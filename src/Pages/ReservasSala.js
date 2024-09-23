@@ -141,7 +141,7 @@ function getEventColor(client,u){
       
       try {
         console.log(verCanc)
-        const response = await Axios.get("http://localhost:5206/api/reservasSala/" + id + "?showCanc=" + (verCanc == null ? 'true' : verCanc)).then((res) =>{
+        const response = await Axios.get("https://23327-a5cpgeh9hwevc7gp.northeurope-01.azurewebsites.net/api/reservasSala/" + id + "?showCanc=" + (verCanc == null ? 'true' : verCanc)).then((res) =>{
           if (res.status!=200) {
               throw new Error(res.statusText);
             }

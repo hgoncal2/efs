@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState,useContext } from "react";
+import { Link,useNavigate } from "react-router-dom";
 import { getDifColor } from "../App";
+import { UserContext } from "../App";
+
 import {LinkContainer} from "react-router-bootstrap";
 import Axios from "axios";
 import Button from 'react-bootstrap/Button';
@@ -10,9 +12,13 @@ export const Salas = () => {
   const [salas, setSalas] = useState([]);
   const [error, setError] = useState(null);
   const [deleted, setDeleted] = useState('');
+  const { user, setUser } = useContext(UserContext);
+
   const [alert, setAlert] = useState(null); 
+  const navigate = useNavigate(); 
 
-
+console.log(user)
+    
   const GeraAnfs = (props) => {
     console.log(props.anfs)
     const anfs = props.anfs.map((i) => (
@@ -38,7 +44,7 @@ export const Salas = () => {
   useEffect(() => {
     const fetchSalas = async () => {
       try {
-        const response = await Axios.get("http://localhost:5206/api/gerir/salas").then((res) =>{
+        const response = await Axios.get("https://23327-a5cpgeh9hwevc7gp.northeurope-01.azurewebsites.net/api/gerir/salas").then((res) =>{
             if (res.status!=200) {
                 throw new Error(res.statusText);
               }
@@ -56,7 +62,7 @@ export const Salas = () => {
 
   const deleteSala = async(salaId) => {
     try{
-      const response = await Axios.delete("http://localhost:5206/api/gerir/salas/" + salaId, {withCredentials: true});
+      const response = await Axios.delete("https://23327-a5cpgeh9hwevc7gp.northeurope-01.azurewebsites.net/api/gerir/salas/" + salaId, {withCredentials: true});
       if(response.status == 200){
         setDeleted('Sala apagada com sucesso!');
       }else{

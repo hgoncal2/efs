@@ -68,11 +68,8 @@ export const CriaAnfitriao = () => {
     
 
 
-
-    //Se quisermos ver todos os temas,não apenas os que têm sala atribuida,podemos passar o param
-    // "showTemasSemSala=true",por defeito é false
     const response = await Axios.post(
-      "http://localhost:5206/api/gerir/anfs",
+      "https://23327-a5cpgeh9hwevc7gp.northeurope-01.azurewebsites.net/api/gerir/anfs",
 
         formData
 

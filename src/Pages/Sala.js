@@ -1,40 +1,41 @@
-import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import React, { useEffect, useState, useContext } from "react";
+import { Link, useParams,useNavigate } from "react-router-dom";
 import { getDifColor } from "../App";
-import {LinkContainer} from "react-router-bootstrap";
+
+import { LinkContainer } from "react-router-bootstrap";
+import Select from "react-select";
+
+import { UserContext } from "../App";
+import { PencilFill } from "react-bootstrap-icons";
 import Axios from "axios";
-import Button from 'react-bootstrap/Button';
-import 'bootstrap/dist/css/bootstrap.min.css';
-export const Sala = (props) => {
-const { id } = useParams();
-const [salaId, setSalaId] = useState('');
-const [sala, setSala] = useState('');
-  const [numero, setNumero] = useState('');
-  const [area, setArea] = useState('');
-  const [listaAnfitrioes, setListaAnfitrioes] = useState([]);
-  const [error, setError] = useState(null);
-  const [alert, setAlert] = useState(null); 
+import Button from "react-bootstrap/Button";
+import { Card, Stack, Form, Row, Col,Alert } from "react-bootstrap";
+import { format } from "date-fns";
+
+import "bootstrap/dist/css/bootstrap.min.css";
+
+import Carousel from "react-bootstrap/Carousel";
+
+export const EditaSala = () => {
+  const [sala, setSala] = useState([]);
+  const { id } = useParams();   
+   const [error, setError] = useState(null);
+  const { user, setUser } = useContext(UserContext);
+  const [showAlert, setShowAlert] = useState(null);
+
+  const navigate = useNavigate(); // Para redirecionar após o login
 
 
-  const GeraAnfs = (props) => {
-    console.log(props.anfs)
-    const anfs = props.anfs.map((i) => (
-    <li key={i} className='list-group-item text-white bg-warning flex-fill ms-2'>{i}</li>
-    ))
-    
-    return (
-    <ul className="list-group text-break list-group-horizontal mt-2 mb-2">
-        {anfs}
-    </ul>
-    
-    )
-    
-    }
+  if(user == null || (!user.roles.includes("Anfitriao") && !user.roles.includes("Admin"))){
+navigate(-1)
+  }
 
   useEffect(() => {
-    const fetchSala = async () => {
+    const fetchTemas = async () => {
       try {
-        const response = await Axios.get("http://localhost:5206/api/gerir/salas/" + id).then((res) =>{
+        //Se quisermos ver todos os temas,não apenas os que têm sala atribuida,podemos passar o param
+        // "showTemasSemSala=true",por defeito é false
+        const response = await Axios.get("https://23327-a5cpgeh9hwevc7gp.northeurope-01.azurewebsites.net/api/gerir/salas/"+id).then((res) =>{
             if (res.status!=200) {
                 throw new Error(res.statusText);
               }
@@ -47,74 +48,195 @@ const [sala, setSala] = useState('');
       }
     };
 
-    fetchSala();
-  }, [sala]);
-
-
-  const editSala = async() => {
-    try{
-      const response = await Axios.put("http://localhost:5206/api/gerir/salas/" + id, {withCredentials: true});
-      if(response.status == 200){
-        setSala(sala);
-      }else{
-        throw new Error('Erro ao apagar Sala!');
-      }
-    }catch(err){
-      setError('Erro ao editar Sala!');
-    }
+    fetchTemas();
+  }, []);
+  if (error) {
+    return (
+      <h1>
+        Error: <span className="text-danger">{error}</span>
+      </h1>
+    );
   }
 
-  return (
+
+  const ConstroiSelect = ({ anfs, allAnfs ,handleSelect }) => {
     
-   
+    const a = allAnfs.map((i) => (
+      <option selected={anfs.includes(i.username)}  value={i.username}>{i.username}</option>
+    ))
+
+    return (
+      <Form.Select multiple aria-label="Default select example" onChange={(e) => handleSelect(e.target.value)}>
+           {a}
+    </Form.Select>
+       
+      
+    )
+  }
     
-    <div className="row w-100">
-      <div col-md={4}>
-        <div style={{margin:"10px 10px 30px 15px "}}>
-            <h1 style={{width:'100% '}}>Sala {sala.salaId}</h1>
-            <hr className="w-100"></hr>
-        </div>
-        <form onSubmit={editSala}>
-          <div style={{margin:'10px 10px 10px 0px'}} >
-            <label htmlFor="numero">Número da Sala</label>
-            <br />
-            <input            
-              style={{backgroundColor:'#6495ED'}}
+
+
+  const ConstroiSala = (props) => {
+    //dados do anf
+    const [numero, setNumero] = useState(props.dados.numero);
+    const [area, setArea] = useState(props.dados.area);
+    const [listaAnfs, setListaAnfs] = useState(props.dados.listaAnfitrioes);
+    const [allAnfits, setAllAnfits] = useState(
+      props.dados.anfsWrappersList.map((anf) => ({
+        value: anf.username,
+        label: anf.username
+      }))
+    );
+    const [selectedAnfs, setSelectedAnfs] = useState(
+      props.dados.listaAnfitrioes.map((anf) => ({
+        value: anf,
+        label: anf
+      }))
+    );
+
+    
+
+
+    const editaSala = async () =>{
+      try {
+        let formData = new FormData();
+        formData.append("numero", numero);
+        formData.append('salaId',id)
+        formData.append("area", area);
+        formData.append("listaAnfitrioes",selectedAnfs ? selectedAnfs.map(option => option.value) : [])
+        
+
+        
+    
+    
+    
+        //Se quisermos ver todos os temas,não apenas os que têm sala atribuida,podemos passar o param
+        // "showTemasSemSala=true",por defeito é false
+        const response = await Axios.put(
+          "https://23327-a5cpgeh9hwevc7gp.northeurope-01.azurewebsites.net/api/gerir/salas/" + id,
+    
+            formData
+    
+          ,{withCredentials:true}
+        ).then((res) => {
+          if (res.status != 200) {
+            throw new Error(res.statusText);
+          }
+          const data = res.data;
+         setShowAlert({msg : "Sala atualizado com sucesso!" , style:"success"})
+          setTimeout(() => {
+            window.location.reload() // Esconder o alerta após 1,2 segundos, por exemplo
+          }, 1200);
+        });
+      } catch (err) {
+       setShowAlert({msg:"Erro a guardar anfitrião!Certifique-se que o nome não pode ter letras,e tem no mínimo 20 caracteres",style:"danger"});
+      }
+    };
+    
+    
+
+
+
+    function onSelect(selectedOptions){
+      setSelectedAnfs(selectedOptions || []); 
+      console.log("Anfitriões selecionados: ", selectedOptions);
+
+      
+    }
+    
+
+    const customStyles = {
+      option: (provided, state) => ({
+        ...provided,
+        color: state.isSelected ? "white" : "blue",  
+        backgroundColor: state.isSelected ? "blue" : "white",  
+        ":hover": {
+          backgroundColor: "lightgray",  
+          color: "black"
+        }
+      }),
+      multiValueLabel: (styles) => ({
+        ...styles,
+        color: "black", 
+         
+      }),
+    };
+
+    const form = () => (
+
+      
+      <Form className="text-center align-center">
+        <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
+          <Col className="ms-5" sm={5}>
+            <Form.Label column sm={2}>
+              Numero
+            </Form.Label>
+            <Form.Control
               type="text"
               
-              id="numero"
-              value={sala.numero}
+              value={numero}
               onChange={(e) => setNumero(e.target.value)}
+
             />
-          </div>
-         
-          <div style={{margin:'10px 10px 10px 0px'}}>
-            <label htmlFor="Area">Area</label>
-            <br />
-            <input
-              style={{backgroundColor:'#6495ED'}}
-              type="area"
-              id="area"
-              value={sala.area}
+          </Col>
+        
+        </Form.Group>
+        <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
+          <Col className="ms-5" sm={5}>
+          <Form.Label column sm={2}>
+              Area
+            </Form.Label>
+            <Form.Control
+              
+              value={area}
               onChange={(e) => setArea(e.target.value)}
             />
-          </div>
-          <div style={{margin:'10px 10px 10px 0px'}}>
-            <label style={{}} htmlFor="listaAnfitrioes">Anfitriões</label>
-            <br />
-            <input
-              style={{backgroundColor:'#6495ED'}}
-              type="listaAnfitrioes"
-              id="listaAnfitrioes"
-              value={sala.listaAnfitrioes}
-              onChange={(e) => setListaAnfitrioes(e.target.value)}
-            />
-          </div>
-          <button className="btn btn-success" style={{margin: '10px',  color:'white'}} type="submit">Guardar Alterações</button>
-          {error && <p style={{ color: 'red', font:'bold' }}>{error}</p>}
-        </form>
-      </div>
+          </Col>
+          
+           
+          
+        </Form.Group>
+        <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
+          <Col className="ms-5" sm={5}>
+          
+          <Select
+        isMulti
+        styles={customStyles}
+        value={selectedAnfs} // Define o valor selecionado atual
+        onChange={onSelect} // Chama quando o select é alterado
+        options={allAnfits} // Passa as opções de anfitriões
+      />   
+          </Col>
+          
+           
+          
+        </Form.Group>
+
+      
+        
+
+        <Button onClick={editaSala} variant="primary" >
+          Guardar
+        </Button>
+      </Form>
+    );
+
+    return <div>
+
+    {form()}
+    </div>;
+  };
+
+  
+  return (
+    <div className="home">
+         {showAlert!=null && <Alert variant={showAlert.style} dismissible onClose={() => setShowAlert(null)}>{showAlert.msg}</Alert>}
+
+      <section className="titulo">
+       {sala.length!=0 && <ConstroiSala dados={sala}></ConstroiSala>} 
+      </section>
     </div>
   );
+};
 
-}
+export default EditaSala;
